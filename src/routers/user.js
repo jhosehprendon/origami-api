@@ -45,57 +45,57 @@ router.post('/users/logout', auth, async (req, res) => {
     }
 })
 
-// router.post('/users/logoutAll', auth, async (req, res) => {
-//     try {
-//         req.user.tokens = []
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
         
-//         await req.user.save()
-//         res.send()
+        await req.user.save()
+        res.send()
 
-//     } catch(e) {
-//         res.status(500).send()
-//     }
-// })
-
-
-// router.get('/users/me', auth, async (req, res) => {
-
-//     res.send(req.user)
-// })
+    } catch(e) {
+        res.status(500).send()
+    }
+})
 
 
-// router.patch('/users/me', auth, async (req, res) => {
-//     const updates = Object.keys(req.body)
-//     const allowedUpdates = ['name', 'age', 'email', 'password']
-//     const isValidOperation = updates.every(el => {
-//         return allowedUpdates.includes(el)
-//     })
+router.get('/users/me', auth, async (req, res) => {
 
-//     if(!isValidOperation) {
-//         return res.status(400).send({ error: 'Invalid updates'})
-//     }
+    res.send(req.user)
+})
 
-//     try {
-//         // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
-//         updates.forEach((el) => req.user[el] = req.body[el])
 
-//         await req.user.save()
+router.patch('/users/me', auth, async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['name', 'age', 'email', 'password']
+    const isValidOperation = updates.every(el => {
+        return allowedUpdates.includes(el)
+    })
 
-//         res.send(req.user)
-//     }catch(e) {
-//         res.status(400).send()
-//     }
-// })
+    if(!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates'})
+    }
 
-// router.delete('/users/me', auth, async (req, res) => {
-//     try {
-//         await req.user.remove()
-//         sendCancelationEmail(req.user.email, req.user.name)
-//         res.send(req.user)
-//     }catch(e) {
-//         res.status(500).send()
-//     }
-// })
+    try {
+        // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        updates.forEach((el) => req.user[el] = req.body[el])
+
+        await req.user.save()
+
+        res.send(req.user)
+    }catch(e) {
+        res.status(400).send()
+    }
+})
+
+router.delete('/users/me', auth, async (req, res) => {
+    try {
+        await req.user.remove()
+        sendCancelationEmail(req.user.email, req.user.name)
+        res.send(req.user)
+    }catch(e) {
+        res.status(500).send()
+    }
+})
 
 // const upload = multer({
 //     limits: {
