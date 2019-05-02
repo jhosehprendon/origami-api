@@ -1,16 +1,19 @@
 const express = require('express');
 const Activity = require('../models/activity');
 const auth = require('../middleware/auth');
+const checkProvider = require('../middleware/checkProvider');
+const checkBusiness = require('../middleware/checkBusiness');
 
 const router = new express.Router();
 
 
 //////// ACTIVITIES ROUTES ////////
 
-router.post('/activity/:businessId', auth, async (req, res) => {
+router.post('/activity/:businessId', auth, checkProvider, checkBusiness, async (req, res) => {
     const activity = new Activity({
         ...req.body,
-        owner: req.params.businessId
+        owner: req.params.businessId,
+        place: req.business.name
     })
 
     try {
@@ -23,39 +26,41 @@ router.post('/activity/:businessId', auth, async (req, res) => {
 })
 
 
-// FILTER GET /tasks?completed=false
-// PAGINATION GET /tasks?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
-// SORTNG GET /tasks?sortBy=createdAt:asc
+// FILTER GET /activities?completed=false
+// PAGINATION GET /activities?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
+// SORTNG GET /activities?sortBy=createdAt:asc
 
-// router.get('/tasks', auth, async (req, res) => {
-//     const match = {}
-//     const sort = {}
+router.get('/activities', auth, checkProvider, checkBusiness, async (req, res) => {
+    const match = {}
+    const sort = {}
 
-//     if(req.query.completed) {
-//         match.completed = req.query.completed === 'true'
-//     }
+    if(req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
 
-//     if(req.query.sortBy) {
-//         const parts = req.query.sortBy.split(':')
-//         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
-//     }
+    if(req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
 
-//     try {
-//         await req.user.populate({
-//             path: 'tasks',
-//             match,
-//             options: {
-//                 limit: parseInt(req.query.limit),
-//                 skip: parseInt(req.query.skip),
-//                 sort
-//             }
-//         }).execPopulate()
-//         res.send(req.user.tasks)
-//     } catch(e) {
-//         res.status(500).send()
-//     }
+    try {
+        await req.business.populate({
+            path: 'activity',
+            match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort
+            }
+        }).execPopulate()
+        // const activities = await Activity.find({ owner: req.business._id })
+
+        res.send(req.business.activity)
+    } catch(e) {
+        res.status(500).send()
+    }
     
-// })
+})
 
 // router.get('/tasks/:id', auth, async (req, res) => {
 

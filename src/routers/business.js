@@ -1,7 +1,7 @@
 const express = require('express');
 const Business = require('../models/business');
 const auth = require('../middleware/auth');
-const checkProvider = require('../middleware/checkProvider')
+const checkProvider = require('../middleware/checkProvider');
 
 const router = new express.Router();
 
@@ -24,7 +24,7 @@ router.post('/business', auth, checkProvider, async (req, res) => {
 })
 
 
-// FILTER GET /tasks?completed=false
+// FILTER GET /business?completed=false
 // PAGINATION GET /tasks?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
 // SORTNG GET /tasks?sortBy=createdAt:asc
 
