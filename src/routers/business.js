@@ -1,13 +1,14 @@
 const express = require('express');
 const Business = require('../models/business');
 const auth = require('../middleware/auth');
+const checkProvider = require('../middleware/checkProvider')
 
 const router = new express.Router();
 
 
 //////// BUSINESS ROUTES ////////
 
-router.post('/business', auth, async (req, res) => {
+router.post('/business', auth, checkProvider, async (req, res) => {
     const business = new Business({
         ...req.body,
         owner: req.user._id
