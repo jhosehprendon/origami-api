@@ -20,11 +20,11 @@ const businessSchema = new mongoose.Schema({
     timestamps: true
 })
 
-// userSchema.virtual('activities', {
-//     ref: 'Activity',
-//     localField: '_id',
-//     foreignField: 'owner'
-// })
+businessSchema.virtual('activity', {
+    ref: 'Activity',
+    localField: '_id',
+    foreignField: 'owner'
+})
 
 const Business = mongoose.model('Business', businessSchema)
 
