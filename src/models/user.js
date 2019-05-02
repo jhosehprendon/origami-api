@@ -3,7 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// const Task = require('./task')
+// const Business = require('./business')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -59,11 +59,11 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 })
 
-// userSchema.virtual('tasks', {
-//     ref: 'Task',
-//     localField: '_id',
-//     foreignField: 'owner'
-// })
+userSchema.virtual('business', {
+    ref: 'Business',
+    localField: '_id',
+    foreignField: 'owner'
+})
 
 ////// Eliminate response data we don't want to show like password and bunch of tokens
 
