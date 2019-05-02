@@ -30,7 +30,7 @@ router.post('/activity/:businessId', auth, checkProvider, checkBusiness, async (
 // PAGINATION GET /activities?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
 // SORTNG GET /activities?sortBy=createdAt:asc
 
-router.get('/activities', auth, checkProvider, checkBusiness, async (req, res) => {
+router.get('/activities', auth, checkBusiness, async (req, res) => {
     const match = {}
     const sort = {}
 
@@ -62,51 +62,51 @@ router.get('/activities', auth, checkProvider, checkBusiness, async (req, res) =
     
 })
 
-// router.get('/tasks/:id', auth, async (req, res) => {
+router.get('/activities/:id', auth, async (req, res) => {
 
-//     const _id = req.params.id
+    const _id = req.params.id
 
-//     try {
+    try {
 
-//         const task = await Task.findOne({ _id, owner: req.user._id})
+        const activity = await Activity.findOne({ _id })
 
-//         if(!task) {
-//             return res.status(404).send()
-//         }
-//         res.send(task)
-//     } catch(e) {
-//         res.status(500).send()
-//     }
+        if(!activity) {
+            return res.status(404).send()
+        }
+        res.send(activity)
+    } catch(e) {
+        res.status(500).send()
+    }
 
-// })
+})
 
-// router.patch('/tasks/:id', auth, async (req, res) => {
-//     const updates = Object.keys(req.body)
-//     const allowedUpdates = ['description', 'completed']
-//     const isValidOperation = updates.every(el => {
-//         return allowedUpdates.includes(el)
-//     })
+router.patch('/activities/:id', auth, async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['description', 'date', 'time', 'completed']
+    const isValidOperation = updates.every(el => {
+        return allowedUpdates.includes(el)
+    })
 
-//     if(!isValidOperation) {
-//         return res.status(400).send({ error: 'Invalid updates'})
-//     }
+    if(!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates'})
+    }
 
-//     try {
+    try {
         
-//         const task = await Task.findOne({_id: req.params.id, owner: req.user._id})
+        const activity = await Activity.findOne({_id: req.params.id})
    
-//         if(!task) {
-//             return res.status(404).send()
-//         }
+        if(!activity) {
+            return res.status(404).send()
+        }
         
-//         updates.forEach((el) => task[el] = req.body[el])
-//         await task.save()
-//         res.send(task)
+        updates.forEach((el) => activity[el] = req.body[el])
+        await activity.save()
+        res.send(activity)
         
-//     }catch(e) {
-//         res.status(400).send()
-//     }
-// })
+    }catch(e) {
+        res.status(400).send()
+    }
+})
 
 // router.delete('/tasks/:id', auth, async (req, res) => {
 //     try {

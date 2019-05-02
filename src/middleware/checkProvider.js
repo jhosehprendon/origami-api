@@ -8,7 +8,7 @@ const checkProvider = async (req, res, next) => {
         next()
     } catch(e) {
         res.status(401).send({
-            error: 'You are not allowed to create a business'
+            error: 'You are not a provider and not allowed to take actions on business'
         })
     }
 }
