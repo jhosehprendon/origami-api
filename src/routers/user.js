@@ -66,7 +66,7 @@ router.get('/users/me', auth, async (req, res) => {
 
 router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'age', 'email', 'password']
+    const allowedUpdates = ['name', 'age', 'email', 'password', 'provider']
     const isValidOperation = updates.every(el => {
         return allowedUpdates.includes(el)
     })

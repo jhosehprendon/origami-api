@@ -9,10 +9,11 @@ const router = new express.Router();
 
 //////// ACTIVITIES ROUTES ////////
 
-router.post('/activity/:businessId', auth, checkProvider, checkBusiness, async (req, res) => {
+router.post('/activity', auth, checkProvider, checkBusiness, async (req, res) => {
     const activity = new Activity({
         ...req.body,
-        owner: req.params.businessId,
+        ownerBusiness: req.business._id,
+        owner: req.user._id,
         place: req.business.name
     })
 
@@ -29,6 +30,8 @@ router.post('/activity/:businessId', auth, checkProvider, checkBusiness, async (
 // FILTER GET /activities?completed=false
 // PAGINATION GET /activities?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
 // SORTNG GET /activities?sortBy=createdAt:asc
+
+//// GET Activities from specific business
 
 router.get('/activities', auth, checkBusiness, async (req, res) => {
     const match = {}
@@ -53,9 +56,62 @@ router.get('/activities', auth, checkBusiness, async (req, res) => {
                 sort
             }
         }).execPopulate()
-        // const activities = await Activity.find({ owner: req.business._id })
 
         res.send(req.business.activity)
+    } catch(e) {
+        res.status(500).send()
+    }
+    
+})
+
+//// GET All Activities
+
+router.get('/activities/all', auth, async (req, res) => {
+    const match = {}
+    const sort = {}
+
+    if(req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
+
+    if(req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+
+    try {
+  
+        const activities = await Activity.find()
+
+        function isEmpty(obj) {
+            for(var key in obj) {
+                if(obj.hasOwnProperty(key))
+                    return false;
+            }
+            return true;
+        }
+
+        if(isEmpty(match)) {
+            var activitiesFiltered = activities
+            if(!isEmpty(sort)) {
+                var activitiesFiltered = activities.sort(() => {
+                    return sort.createdAt
+                })
+            }
+        } else {
+            var activitiesFiltered = activities.filter(el => {
+                return el.completed === match.completed
+            })
+            if(!isEmpty(sort)) {
+                activitiesFiltered = activitiesFiltered.sort(() => {
+                    return sort.createdAt
+                })
+            }
+
+        }
+
+
+        res.send(activitiesFiltered)
     } catch(e) {
         res.status(500).send()
     }
@@ -68,7 +124,7 @@ router.get('/activities/:id', auth, async (req, res) => {
 
     try {
 
-        const activity = await Activity.findOne({ _id })
+        const activity = await Activity.findOne({ _id, owner: req.user._id })
 
         if(!activity) {
             return res.status(404).send()
@@ -93,7 +149,7 @@ router.patch('/activities/:id', auth, async (req, res) => {
 
     try {
         
-        const activity = await Activity.findOne({_id: req.params.id})
+        const activity = await Activity.findOne({_id: req.params.id, owner: req.user._id})
    
         if(!activity) {
             return res.status(404).send()
@@ -108,18 +164,18 @@ router.patch('/activities/:id', auth, async (req, res) => {
     }
 })
 
-// router.delete('/tasks/:id', auth, async (req, res) => {
-//     try {
+router.delete('/activities/:id', auth, async (req, res) => {
+    try {
 
-//         const task = await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id})
+        const activity = await Activity.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
 
-//         if(!task) {
-//             res.send(404).send()
-//         }
-//         res.send(task)
-//     }catch(e) {
-//         res.status(500).send()
-//     }
-// })
+        if(!activity) {
+            res.send(404).send()
+        }
+        res.send(activity)
+    }catch(e) {
+        res.status(500).send()
+    }
+})
 
 module.exports = router

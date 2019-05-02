@@ -28,7 +28,7 @@ const businessSchema = new mongoose.Schema({
 businessSchema.virtual('activity', {
     ref: 'Activity',
     localField: '_id',
-    foreignField: 'owner'
+    foreignField: 'ownerBusiness'
 })
 
 const Business = mongoose.model('Business', businessSchema)
