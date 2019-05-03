@@ -71,6 +71,7 @@ router.get('/activities/all', auth, async (req, res) => {
     const match = {}
     const sort = {}
     let limit = null
+    let skip = 0
 
     if(req.query.completed) {
         match.completed = req.query.completed === 'true'
@@ -82,7 +83,8 @@ router.get('/activities/all', auth, async (req, res) => {
     }
 
     if(req.query.limit) {
-        limit = req.query.limit
+        limit = parseInt(req.query.limit) 
+        skip = parseInt(req.query.skip) || 0
     }
 
     try {
@@ -118,8 +120,7 @@ router.get('/activities/all', auth, async (req, res) => {
 
         if(limit) {
             var activitiesLimit = []
-
-            for(var i = 0; i < limit; i++) {
+            for(var i = skip; i < limit+skip; i++) {
                 if(activitiesFiltered[i] == null) {
                     break;
                 }
