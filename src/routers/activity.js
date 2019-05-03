@@ -65,7 +65,7 @@ router.get('/activities', auth, checkBusiness, async (req, res) => {
 })
 
 //// GET All Activities
-// PAGINATION GET /activities?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
+// PAGINATION GET /activities?limit=10&skip=0 (First page with 10 results) 
 
 router.get('/activities/all', auth, async (req, res) => {
     const match = {}

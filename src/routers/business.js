@@ -58,51 +58,51 @@ router.post('/business', auth, checkProvider, async (req, res) => {
     
 // })
 
-// router.get('/tasks/:id', auth, async (req, res) => {
+router.get('/business/:id', auth, async (req, res) => {
 
-//     const _id = req.params.id
+    const _id = req.params.id
 
-//     try {
+    try {
 
-//         const task = await Task.findOne({ _id, owner: req.user._id})
+        const business = await Business.findOne({ _id, owner: req.user._id})
 
-//         if(!task) {
-//             return res.status(404).send()
-//         }
-//         res.send(task)
-//     } catch(e) {
-//         res.status(500).send()
-//     }
+        if(!business) {
+            return res.status(404).send()
+        }
+        res.send(business)
+    } catch(e) {
+        res.status(500).send()
+    }
 
-// })
+})
 
-// router.patch('/tasks/:id', auth, async (req, res) => {
-//     const updates = Object.keys(req.body)
-//     const allowedUpdates = ['description', 'completed']
-//     const isValidOperation = updates.every(el => {
-//         return allowedUpdates.includes(el)
-//     })
+router.patch('/business/:id', auth, async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['name', 'description', 'location']
+    const isValidOperation = updates.every(el => {
+        return allowedUpdates.includes(el)
+    })
 
-//     if(!isValidOperation) {
-//         return res.status(400).send({ error: 'Invalid updates'})
-//     }
+    if(!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates'})
+    }
 
-//     try {
+    try {
         
-//         const task = await Task.findOne({_id: req.params.id, owner: req.user._id})
+        const business = await Business.findOne({_id: req.params.id, owner: req.user._id})
    
-//         if(!task) {
-//             return res.status(404).send()
-//         }
+        if(!business) {
+            return res.status(404).send()
+        }
         
-//         updates.forEach((el) => task[el] = req.body[el])
-//         await task.save()
-//         res.send(task)
+        updates.forEach((el) => business[el] = req.body[el])
+        await business.save()
+        res.send(business)
         
-//     }catch(e) {
-//         res.status(400).send()
-//     }
-// })
+    }catch(e) {
+        res.status(400).send()
+    }
+})
 
 // router.delete('/tasks/:id', auth, async (req, res) => {
 //     try {
