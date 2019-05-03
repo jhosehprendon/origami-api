@@ -65,10 +65,12 @@ router.get('/activities', auth, checkBusiness, async (req, res) => {
 })
 
 //// GET All Activities
+// PAGINATION GET /activities?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
 
 router.get('/activities/all', auth, async (req, res) => {
     const match = {}
     const sort = {}
+    let limit = null
 
     if(req.query.completed) {
         match.completed = req.query.completed === 'true'
@@ -77,6 +79,10 @@ router.get('/activities/all', auth, async (req, res) => {
     if(req.query.sortBy) {
         const parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+
+    if(req.query.limit) {
+        limit = req.query.limit
     }
 
     try {
@@ -109,6 +115,20 @@ router.get('/activities/all', auth, async (req, res) => {
             }
 
         }
+
+        if(limit) {
+            var activitiesLimit = []
+
+            for(var i = 0; i < limit; i++) {
+                if(activitiesFiltered[i] == null) {
+                    break;
+                }
+                activitiesLimit.push(activitiesFiltered[i])
+            }
+            return res.send(activitiesLimit)
+        }
+
+        
 
 
         res.send(activitiesFiltered)
