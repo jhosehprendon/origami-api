@@ -3,7 +3,8 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// const Business = require('./business')
+const Business = require('./business')
+const Activity = require('./activity')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -33,10 +34,6 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
-    provider: {
-        type: Boolean,
-        default: false
-    },
     age: {
         type: Number,
         default: 0,
@@ -45,6 +42,10 @@ const userSchema = new mongoose.Schema({
                 throw new Error('age must be positive')
             }
         }
+    },
+    provider: {
+        type: Boolean,
+        default: false
     },
     tokens: [{
         token: {
@@ -67,6 +68,12 @@ userSchema.virtual('business', {
 
 userSchema.virtual('activity', {
     ref: 'Activity',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
+userSchema.virtual('child', {
+    ref: 'Child',
     localField: '_id',
     foreignField: 'owner'
 })
@@ -124,14 +131,15 @@ userSchema.pre('save', async function(next) {
     next()
 })
 
-// // Deletes user tasks when user is removed
-// userSchema.pre('remove', async function(next) {
-//     const user = this
+// Deletes user businesses when user is removed
+userSchema.pre('remove', async function(next) {
+    const user = this
 
-//     await Task.deleteMany({ owner: user._id })
+    await Business.deleteMany({ owner: user._id })
+    await Activity.deleteMany({ owner: user._id })
 
-//     next()
-// })
+    next()
+})
 
 const User = mongoose.model('User', userSchema)
 

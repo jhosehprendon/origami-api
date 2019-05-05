@@ -1,12 +1,11 @@
 const Business = require('../models/business');
 
-const checkProvider = async (req, res, next) => {
+const checkBusiness = async (req, res, next) => {
     try {
-        
         const business = await Business.find({ owner: res.locals.user._id })
         req.business = business[0]
 
-        if(!business) {
+        if(business.length <= 0) {
             throw new Error()
         }
         next()
@@ -17,4 +16,4 @@ const checkProvider = async (req, res, next) => {
     }
 }
 
-module.exports = checkProvider
+module.exports = checkBusiness

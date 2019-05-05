@@ -1,7 +1,6 @@
 
 const checkProvider = async (req, res, next) => {
     try {
-
         if(!res.locals.user.provider) {
             throw new Error()
         }

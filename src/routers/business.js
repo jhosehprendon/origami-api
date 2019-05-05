@@ -23,11 +23,6 @@ router.post('/business', auth, checkProvider, async (req, res) => {
 
 })
 
-
-// FILTER GET /business?completed=false
-// PAGINATION GET /tasks?limit=10&skip=0 (First page with 10 results) /tasks?limit=10&skip=10 (Second page with 10 results)
-// SORTNG GET /tasks?sortBy=createdAt:asc
-
 // router.get('/tasks', auth, async (req, res) => {
 //     const match = {}
 //     const sort = {}
@@ -104,18 +99,18 @@ router.patch('/business/:id', auth, async (req, res) => {
     }
 })
 
-// router.delete('/tasks/:id', auth, async (req, res) => {
-//     try {
+router.delete('/business/:id', auth, async (req, res) => {
+    try {
 
-//         const task = await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id})
+        const business = await Business.findOneAndDelete({ _id: req.params.id, owner: req.user._id})
 
-//         if(!task) {
-//             res.send(404).send()
-//         }
-//         res.send(task)
-//     }catch(e) {
-//         res.status(500).send()
-//     }
-// })
+        if(!business) {
+            res.send(404).send()
+        }
+        res.send(business)
+    }catch(e) {
+        res.status(500).send()
+    }
+})
 
 module.exports = router
