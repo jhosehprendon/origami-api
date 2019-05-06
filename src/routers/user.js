@@ -71,6 +71,36 @@ router.delete('/child/:id', auth, async (req, res) => {
     }
 })
 
+//////// UPDATE CHILD
+
+router.patch('/child/:id', auth, async (req, res) => {
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['name', 'age']
+    const isValidOperation = updates.every(el => {
+        return allowedUpdates.includes(el)
+    })
+
+    if(!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates'})
+    }
+
+    try {
+        
+        const child = await Child.findOne({_id: req.params.id, owner: req.user._id})
+   
+        if(!child) {
+            return res.status(404).send()
+        }
+        
+        updates.forEach((el) => child[el] = req.body[el])
+        await child.save()
+        res.send(child)
+        
+    }catch(e) {
+        res.status(400).send()
+    }
+})
+
 ////////////////////
 ////////////////////
 ////////////////////
