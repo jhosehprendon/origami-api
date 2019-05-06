@@ -22,6 +22,10 @@ router.post('/users', async (req, res) => {
 
 })
 
+////////////////////////////////
+///////// CHILD ROUTES /////////
+///////////////////////////////
+
 ///// ADD CHILD
 
 router.post('/child', auth, async (req, res) => {
@@ -37,6 +41,39 @@ router.post('/child', auth, async (req, res) => {
         res.status(400).send(err)
     }
 })
+
+////// READ CHILDREN
+
+router.get('/children', auth, async (req, res) => {
+
+    try {
+        const children = await Child.find()
+        await res.send(children)
+    } catch(e) {
+        res.status(500).send()
+    }
+    
+})
+
+//////// DELETE CHILD
+
+router.delete('/child/:id', auth, async (req, res) => {
+    try {
+
+        const child = await Child.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
+
+        if(!child) {
+            res.send(404).send()
+        }
+        res.send(child)
+    }catch(e) {
+        res.status(500).send()
+    }
+})
+
+////////////////////
+////////////////////
+////////////////////
 
 router.post('/users/login', async (req, res) => {
     try {
