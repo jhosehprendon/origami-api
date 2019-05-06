@@ -6,10 +6,9 @@ const childSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    age: {
-        type: Number,
-        required: true,
-        trim: true
+    dob: {
+        type: String,
+        required: true
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,

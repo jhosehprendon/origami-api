@@ -4,6 +4,7 @@ const checkBusiness = async (req, res, next) => {
     try {
         const business = await Business.find({ owner: res.locals.user._id })
         req.business = business[0]
+        res.locals.business = business
 
         if(business.length <= 0) {
             throw new Error()

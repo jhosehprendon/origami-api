@@ -3,7 +3,8 @@ require('./db/mongoose');
 
 const userRouter = require('./routers/user');
 const businessRouter = require('./routers/business');
-const activityRouter = require('./routers/activity')
+const activityRouter = require('./routers/activity');
+const bookingRouter = require('./routers/booking');
 
 const app = express()
 const port = process.env.PORT
@@ -18,6 +19,7 @@ app.use(express.json())
 app.use(userRouter)
 app.use(businessRouter)
 app.use(activityRouter)
+app.use(bookingRouter)
 
 app.listen(port, () => {
     console.log('Server is up on port: ' + port)

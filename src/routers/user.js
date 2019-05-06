@@ -75,7 +75,7 @@ router.delete('/child/:id', auth, async (req, res) => {
 
 router.patch('/child/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['name', 'age']
+    const allowedUpdates = ['name', 'dob']
     const isValidOperation = updates.every(el => {
         return allowedUpdates.includes(el)
     })

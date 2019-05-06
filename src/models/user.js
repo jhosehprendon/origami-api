@@ -78,6 +78,12 @@ userSchema.virtual('child', {
     foreignField: 'owner'
 })
 
+userSchema.virtual('booking', {
+    ref: 'Booking',
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 ////// Eliminate response data we don't want to show like password and bunch of tokens
 
 userSchema.methods.toJSON = function() {

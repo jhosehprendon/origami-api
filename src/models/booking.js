@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
-const activitySchema = new mongoose.Schema({
-    description: {
+const bookingSchema = new mongoose.Schema({
+    status: {
         type: String,
-        required: true,
-        trim: true
+        default: 'open'
     },
     date: {
         type: String,
@@ -18,14 +17,10 @@ const activitySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    completed: {
-        type: Boolean,
-        default: false
-    },
-    ownerBusiness: {
+    ownerActivity: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Business'
+        ref: 'Activity'
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
@@ -36,12 +31,6 @@ const activitySchema = new mongoose.Schema({
     timestamps: true
 })
 
-activitySchema.virtual('booking', {
-    ref: 'Booking',
-    localField: '_id',
-    foreignField: 'ownerActivity'
-})
+const Booking = mongoose.model('Booking', bookingSchema)
 
-const Activity = mongoose.model('Activity', activitySchema)
-
-module.exports = Activity
+module.exports = Booking
