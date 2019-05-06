@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const sharp = require('sharp');
 const User = require('../models/user');
+const Child = require('../models/child');
 const auth = require('../middleware/auth');
 
 const router = new express.Router();
@@ -19,6 +20,22 @@ router.post('/users', async (req, res) => {
         res.status(400).send(e)
     }
 
+})
+
+///// ADD CHILD
+
+router.post('/child', auth, async (req, res) => {
+    const child = new Child({
+        ...req.body,
+        owner: req.user._id
+    })
+
+    try {
+        await child.save()
+        res.status(201).send(child)
+    } catch(e) {
+        res.status(400).send(err)
+    }
 })
 
 router.post('/users/login', async (req, res) => {
