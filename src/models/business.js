@@ -31,6 +31,12 @@ businessSchema.virtual('activity', {
     foreignField: 'ownerBusiness'
 })
 
+businessSchema.virtual('booking', {
+    ref: 'Booking',
+    localField: '_id',
+    foreignField: 'ownerBusiness'
+})
+
 businessSchema.pre('findOneAndDelete', async function(next) {
     const business = this
 

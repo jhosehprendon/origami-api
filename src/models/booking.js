@@ -17,10 +17,19 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    children: {
+        type: Array,
+        required: true
+    },
     ownerActivity: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Activity'
+    },
+    ownerBusiness: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Business'
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
