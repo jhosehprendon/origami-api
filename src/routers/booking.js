@@ -33,6 +33,8 @@ router.post('/booking/:businessId/:activityId', auth, async (req, res) => {
 
 })
 
+//// READ ALL BOOKINGS ASSINGED TO AN SPECIFIC PROVIDER AND BUSINESS
+
 router.get('/bookings', auth, checkBusiness, async (req, res) => {
     const match = {}
     const sort = {}
@@ -63,9 +65,19 @@ router.get('/bookings', auth, checkBusiness, async (req, res) => {
         }
     } else {
         res.status(400).send({ error: e})
+    }   
+})
+
+///// READ ALL BOOKINGS FROM AN SPECIFIC USER
+
+router.get('/bookings/me', auth, async (req, res) => {
+    try {
+        const bookings = await Booking.find({ owner: req.user._id})
+        res.send(bookings)
     }
-    
-    
+     catch(e) {
+        res.status(400).send({ error: e})
+    }   
 })
 
 router.delete('/booking/:id', auth, async (req, res) => {
