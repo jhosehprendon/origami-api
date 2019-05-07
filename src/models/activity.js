@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Booking = require('./booking');
 
 const activitySchema = new mongoose.Schema({
     description: {
@@ -40,6 +41,15 @@ activitySchema.virtual('booking', {
     ref: 'Booking',
     localField: '_id',
     foreignField: 'ownerActivity'
+})
+
+// Deletes user businesses when user is removed
+activitySchema.pre('findOneAndDelete', async function(next) {
+    const activity = this
+    console.log(activity._conditions._id)
+    await Booking.deleteMany({ ownerActivity: activity._conditions._id })
+
+    next()
 })
 
 const Activity = mongoose.model('Activity', activitySchema)

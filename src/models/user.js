@@ -140,7 +140,7 @@ userSchema.pre('save', async function(next) {
 // Deletes user businesses when user is removed
 userSchema.pre('remove', async function(next) {
     const user = this
-
+    console.log(user._id)
     await Business.deleteMany({ owner: user._id })
     await Activity.deleteMany({ owner: user._id })
 

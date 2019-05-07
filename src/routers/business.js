@@ -2,6 +2,7 @@ const express = require('express');
 const Business = require('../models/business');
 const auth = require('../middleware/auth');
 const checkProvider = require('../middleware/checkProvider');
+const checkBusiness = require('../middleware/checkBusiness');
 
 const router = new express.Router();
 
@@ -99,7 +100,7 @@ router.patch('/business/:id', auth, async (req, res) => {
     }
 })
 
-router.delete('/business/:id', auth, async (req, res) => {
+router.delete('/business/:id', auth, checkBusiness, async (req, res) => {
     try {
 
         const business = await Business.findOneAndDelete({ _id: req.params.id, owner: req.user._id})

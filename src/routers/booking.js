@@ -33,7 +33,7 @@ router.post('/booking/:businessId/:activityId', auth, async (req, res) => {
 
 })
 
-//// READ ALL BOOKINGS ASSINGED TO AN SPECIFIC PROVIDER AND BUSINESS
+//// READ ALL BOOKINGS ASSINGED TO SPECIFIC PROVIDER AND BUSINESS
 
 router.get('/bookings', auth, checkBusiness, async (req, res) => {
     const match = {}
@@ -68,7 +68,7 @@ router.get('/bookings', auth, checkBusiness, async (req, res) => {
     }   
 })
 
-///// READ ALL BOOKINGS FROM AN SPECIFIC USER
+///// READ ALL BOOKINGS FROM SPECIFIC USER
 
 router.get('/bookings/me', auth, async (req, res) => {
     try {
@@ -79,6 +79,8 @@ router.get('/bookings/me', auth, async (req, res) => {
         res.status(400).send({ error: e})
     }   
 })
+
+///// CANCEL BOOKING
 
 router.delete('/booking/:id', auth, async (req, res) => {
     try {

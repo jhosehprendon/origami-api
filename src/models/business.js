@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Activity = require('./activity')
+const Activity = require('./activity');
+const Booking = require('./booking');
 
 const businessSchema = new mongoose.Schema({
     name: {
@@ -39,11 +40,11 @@ businessSchema.virtual('booking', {
 
 businessSchema.pre('findOneAndDelete', async function(next) {
     const business = this
-
-    await Activity.deleteMany({ businessOwner: business._id })
-
+    await Activity.deleteMany({ ownerBusiness: business._conditions._id })
+    await Booking.deleteMany({ ownerBusiness: business._conditions._id })
     next()
 })
+
 
 const Business = mongoose.model('Business', businessSchema)
 
